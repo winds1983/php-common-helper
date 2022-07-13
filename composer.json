@@ -1,0 +1,17 @@
+{
+    "name": "hive/php-common-helper",
+    "description": "PHP common helper functions",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Hive\\Helper\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jason Sun",
+            "email": "dev.winds@gmail.com"
+        }
+    ],
+    "require": {}
+}
