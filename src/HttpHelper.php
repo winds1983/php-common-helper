@@ -51,4 +51,27 @@ class HttpHelper
         $preg = "/^http(s)?:\\/\\/.+/";
         return preg_match($preg, $url);
     }
+
+    /**
+     * 说明：判断是否为合法的ip地址
+     * 判断是否为合法的ip地址
+     * @param string $ip ip地址
+     * @return bool|int 不合法则返回false，合法则返回4（IPV4）或6（IPV6）
+     */
+    public static function isIpAddress(string $ip)
+    {
+        $ipv4Regex = '/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/';
+
+        $ipv6Regex = '/^(((?=.*(::))(?!.*\3.+\3))\3?|([\dA-F]{1,4}(\3|:\b|$)|\2))(?4){5}((?4){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i';
+
+        if (preg_match($ipv4Regex, $ip)) {
+            return 4;
+        }
+
+        if (false !== strpos($ip, ':') && preg_match($ipv6Regex, trim($ip, ' []'))) {
+            return 6;
+        }
+
+        return false;
+    }
 }

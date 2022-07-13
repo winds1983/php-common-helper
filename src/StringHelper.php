@@ -2,16 +2,17 @@
 
 namespace Hive\Helper;
 
+/**
+ * @link https://blog.csdn.net/m0_50593634/article/details/124451681
+ */
 class StringHelper
 {
     /**
-     * replace non-alphanumeric and non-numeric characters
-     *
+     * Replace non-alphanumeric and non-numeric characters
      * @param string $str
-     *
      * @return string
      */
-    public static function formatAlias($str)
+    public static function formatAlias(string $str): string
     {
         if (preg_match('/\W+/', $str)) {
             $str = preg_replace('/\W+/', '-', $str);
@@ -20,32 +21,32 @@ class StringHelper
     }
 
     /**
-     * generate random password
+     * Generate random password
      *
-     * @param integer $chars_min
-     * @param integer $chars_max
-     * @param boolean $use_upper_case
-     * @param boolean $include_numbers
-     * @param boolean $include_special_chars
+     * @param integer $charsMin
+     * @param integer $charsMax
+     * @param boolean $useUppercase
+     * @param boolean $includeNumbers
+     * @param boolean $includeSpecialChars
      * @return string
      */
-    public static function generateRandomPassword($chars_min = 6, $chars_max = 8, $use_upper_case = false, $include_numbers = false, $include_special_chars = false)
+    public static function generateRandomPassword(int $charsMin = 6, int $charsMax = 8, bool $useUppercase = false, bool $includeNumbers = false, bool $includeSpecialChars = false): string
     {
-        $length = rand($chars_min, $chars_max);
+        $length = rand($charsMin, $charsMax);
         $selection = 'abcdefghijklmnopqrstuvwxyz';
 
-        if ($include_numbers) {
+        if ($includeNumbers) {
             $selection .= '1234567890';
         }
 
-        if ($include_special_chars) {
+        if ($includeSpecialChars) {
             $selection .= "!@\"#$%&[]{}?|";
         }
 
         $password = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $current_letter = $use_upper_case ? (rand(0, 1) ? strtoupper($selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))];
+            $current_letter = $useUppercase ? (rand(0, 1) ? strtoupper($selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))];
             $password .= $current_letter;
         }
 
@@ -187,5 +188,94 @@ class StringHelper
     public static function getStringLength($str)
     {
         return mb_strlen($str, "utf-8");
+    }
+
+    /**
+     * Check if it is valid email address
+     * @param string $email
+     * @return bool
+     */
+    public static function isValidEmail(string $email)
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否为手机访问
+     * @return  boolean
+     */
+    public static function isMobile()
+    {
+
+        $sp_is_mobile = false;
+
+        if (empty($_SERVER['HTTP_USER_AGENT'])) {
+            $sp_is_mobile = false;
+        } elseif (
+            strpos($_SERVER['HTTP_USER_AGENT'], 'Mobile') !== false // many mobile devices (all iPhone, iPad, etc.)
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Android') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Silk/') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Kindle') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'BlackBerry') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mobi') !== false
+        ) {
+            $sp_is_mobile = true;
+        } else {
+            $sp_is_mobile = false;
+        }
+
+        return $sp_is_mobile;
+    }
+
+    /**
+     * 判断是否为微信访问
+     * @return boolean
+     */
+    public static function isWeiXin()
+    {
+        if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 检查手机号码格式
+     * @param $mobile 手机号码
+     */
+    public static function isValidMobile($mobile)
+    {
+        if (preg_match('/1[0123456789]\d{9}$/', $mobile)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 检查固定电话
+     * @param $mobile
+     * @return bool
+     */
+    public static function isValidTelephone($mobile)
+    {
+        if (preg_match('/^([0-9]{3,4}-)?[0-9]{7,8}$/', $mobile)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 当前请求是否是https
+     * @return bool
+     */
+    public static function isHttps()
+    {
+        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off';
     }
 }
